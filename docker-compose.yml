@@ -1,0 +1,32 @@
+services:
+  grafana:
+    image: grafana/grafana-enterprise:10.0.12
+    user: "1000:1000"
+    restart: always
+    volumes:
+      - "./volumes/grafana_data:/var/lib/grafana:rw"
+    environment:
+      - "GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:?}"
+      - "GF_INSTALL_PLUGINS=${GF_INSTALL_PLUGINS:-}"
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.grafana_aoirint_com.grafana.{{.ID}}
+        fluentd-async: "true"
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    depends_on:
+      - grafana
+    ports:
+      - "${NGINX_HOST_PORT:?}:80/tcp"
+    volumes:
+      - ./nginx_templates:/etc/nginx/templates
+    environment:
+      - NGINX_ENVSUBST_TEMPLATE_SUFFIX=.nginx
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.grafana_aoirint_com.nginx.{{.ID}}
+        fluentd-async: "true"
