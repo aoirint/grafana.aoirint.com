@@ -1,6 +1,6 @@
 services:
   grafana:
-    image: grafana/grafana-enterprise:10.0.12
+    image: grafana/grafana-enterprise:10.1.9
     user: "1000:1000"
     restart: always
     volumes:
