@@ -39,3 +39,8 @@ services:
       - nginx
     environment:
       TUNNEL_TOKEN: ${CLOUDFLARED_TUNNEL_TOKEN:?}
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.grafana_aoirint_com.cloudflared.{{.ID}}
+        fluentd-async: "true"
